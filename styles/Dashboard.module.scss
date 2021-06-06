@@ -1,0 +1,27 @@
+.tableWrapper {
+  table {
+    width: 100%;
+    margin-top: 1.5rem;
+    text-align: center;
+    tr {
+      font-size: 1.1rem;
+      td,
+      th {
+        padding: 0.5rem 0.2rem;
+        span {
+          cursor: pointer;
+        }
+      }
+    }
+    thead {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+    tbody {
+      tr {
+        &:nth-child(even) {
+          background-color: rgba(0, 0, 0, 0.1);
+        }
+      }
+    }
+  }
+}
