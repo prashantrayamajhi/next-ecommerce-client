@@ -1,11 +1,48 @@
+import { useState, useEffect } from "react";
 import Layout from "@/components/Layout";
 import Axios from "@/api/server";
-import cookie from "cookie";
 import styles from "@/styles/Dashboard.module.scss";
+import { checkAuth } from "@/helper/auth";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import {useRouter} from "next/router";
 
-export default function dashboard({ user, products, config }) {
+export default function dashboard() {
+  const [products, setProducts] = useState([]);
+  const [user, setUser] = useState(null);
+  const [config, setConfig] = useState(null);
+  const router = useRouter()
+
+  useEffect(() => {
+    const token = checkAuth();
+    if(token){
+      setConfig({
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      });
+    }else{
+      router.push('/auth/login')
+    }
+  }, []);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const res = await Axios.get("/api/v1/profile", config);
+      setUser(res.data.data);
+    };
+
+    const fectchProducts = async () => {
+      const res = await Axios.get("/api/v1/profile/products", config);
+      setProducts(res.data.data);
+    };
+
+    if (config) {
+      fetchProfile();
+      fectchProducts();
+    }
+  }, [config]);
+
   const handleDelete = async (id) => {
     try {
       const res = await Axios.delete(
@@ -25,69 +62,46 @@ export default function dashboard({ user, products, config }) {
   return (
     <>
       <ToastContainer />
-      <Layout title={user.name}>
-        <div className={styles.tableWrapper}>
-          <h1>{user && user.name}</h1>
-          <table>
-            <thead>
-              <tr>
-                <th>SN</th>
-                <th>Name</th>
-                <th>Price</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {products.map((product, index) => {
-                sn++;
-                return (
-                  <tr key={index}>
-                    <td>{sn}</td>
-                    <td>{product.name}</td>
-                    <td>{product.price}</td>
-                    <td>
-                      <span>Edit</span> |{" "}
-                      <span
-                        onClick={() => {
-                          handleDelete(product._id);
-                        }}
-                      >
-                        Delete
-                      </span>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </Layout>
+      {user && (
+        <Layout title={user.name}>
+          <div className={styles.tableWrapper}>
+            <h1>{user && user.name}</h1>
+            <table>
+              <thead>
+                <tr>
+                  <th>SN</th>
+                  <th>Name</th>
+                  <th>Price</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {products &&
+                  products.map((product, index) => {
+                    sn++;
+                    return (
+                      <tr key={index}>
+                        <td>{sn}</td>
+                        <td>{product.name}</td>
+                        <td>{product.price}</td>
+                        <td>
+                          <span>Edit</span> |{" "}
+                          <span
+                            onClick={() => {
+                              handleDelete(product._id);
+                            }}
+                          >
+                            Delete
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  })}
+              </tbody>
+            </table>
+          </div>
+        </Layout>
+      )}
     </>
   );
-}
-
-export async function getServerSideProps({ req }) {
-  if (!req.headers.cookie || "") {
-    return {
-      redirect: {
-        destination: "/auth/login",
-      },
-    };
-  }
-  const { token } = cookie.parse(req.headers.cookie);
-  const config = {
-    headers: {
-      authorization: `Bearer ${token}`,
-    },
-  };
-  const res = await Axios.get("/api/v1/profile", config);
-  const products = await Axios.get("/api/v1/profile/products", config);
-
-  return {
-    props: {
-      user: res.data.data,
-      products: products.data.data,
-      config,
-    },
-  };
 }

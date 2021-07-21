@@ -1,12 +1,11 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import styles from "@/styles/Navbar.module.scss";
-import AuthContext from "./../context/AuthContext";
+import { checkAuth, logout } from "@/helper/auth";
 import { useRouter } from "next/router";
 
 const Navbar = () => {
   const router = useRouter();
-  const { user, logout } = useContext(AuthContext);
   const [term, setTerm] = useState("");
 
   const handleFormSubmit = async (e) => {
@@ -17,13 +16,19 @@ const Navbar = () => {
     router.push("/product/search?term=" + term);
   };
   const displayNavItems = () => {
-    if (user) {
+    if (checkAuth()) {
       return (
         <>
           <Link href={"/profile/dashboard"}>
             <a>Dashboard</a>
           </Link>
-          <p className={styles.link} onClick={logout}>
+          <p
+            className={styles.link}
+            onClick={() => {
+              logout();
+              router.push("/auth/login");
+            }}
+          >
             Logout
           </p>
         </>

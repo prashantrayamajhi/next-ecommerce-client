@@ -3,22 +3,45 @@ import Layout from "@/components/Layout";
 import Link from "next/link";
 import styles from "@/styles/Form.module.scss";
 import Axios from "@/api/server";
-import AuthContext from "./../../context/AuthContext";
+import { useRouter } from "next/router";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function login() {
-  const { login, error } = useContext(AuthContext);
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const router = useRouter();
+
+  if (error) {
+    toast.error(error);
+  }
 
   const onFormSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    login({ email, password, setIsLoading });
+
+    const data = { email, password };
+    try {
+      const res = await Axios.post("/api/v1/auth/login", data);
+      setIsLoading(false);
+      if (res.status === 200) {
+        localStorage.setItem("token", res.data.data.token);
+        localStorage.setItem("email", res.data.data.email);
+        localStorage.setItem("id", res.data.data.id);
+        router.push("/profile/dashboard");
+      }
+    } catch (err) {
+      setError(err.response.data.err);
+      setError(null);
+      setIsLoading(false);
+      console.log(err);
+    }
   };
   return (
     <>
+      <ToastContainer />
       <Layout title="Login">
         <form className={styles.form} onSubmit={onFormSubmit}>
           <h3>Login</h3>

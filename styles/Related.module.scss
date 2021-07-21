@@ -1,0 +1,12 @@
+.relatedProducts {
+  margin-top: 4rem;
+  h3 {
+    font-size: 1.8rem;
+  }
+  .products {
+    margin-top: 1.3rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    grid-gap: 1.5rem;
+  }
+}

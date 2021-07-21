@@ -1,9 +1,10 @@
 import Layout from "@/components/Layout";
 import Axios from "./../../api/server";
+import SellerDetails from "@/components/SellerDetails";
+import RelatedProducts from "@/components/RelatedProducts";
 import styles from "@/styles/Product.module.scss";
 
-export default function Product({ product }) {
-  console.log(product);
+export default function Product({ product, relatedProducts }) {
   return (
     <>
       <Layout title={product.name} description={product.description}>
@@ -21,6 +22,8 @@ export default function Product({ product }) {
             </div>
           </div>
         </div>
+        <SellerDetails seller={product.user} />
+        <RelatedProducts products={relatedProducts} />
       </Layout>
     </>
   );
@@ -28,9 +31,16 @@ export default function Product({ product }) {
 
 export async function getServerSideProps({ params }) {
   const product = await Axios.get("/api/v1/products/" + params.id);
+  const relatedProducts = await Axios.get(
+    "/api/v1/products/related/" +
+      params.id +
+      "/" +
+      product.data.data.category._id
+  );
   return {
     props: {
       product: product.data.data,
+      relatedProducts: relatedProducts.data.data,
     },
   };
 }
