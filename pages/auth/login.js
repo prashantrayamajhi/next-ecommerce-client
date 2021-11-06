@@ -28,7 +28,6 @@ export default function login() {
       setIsLoading(false);
       if (res.status === 200) {
         localStorage.setItem("token", res.data.data.token);
-        localStorage.setItem("email", res.data.data.email);
         localStorage.setItem("id", res.data.data.id);
         router.push("/profile/dashboard");
       }

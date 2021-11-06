@@ -5,24 +5,24 @@ import styles from "@/styles/Dashboard.module.scss";
 import { checkAuth } from "@/helper/auth";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 
 export default function dashboard() {
   const [products, setProducts] = useState([]);
   const [user, setUser] = useState(null);
   const [config, setConfig] = useState(null);
-  const router = useRouter()
+  const router = useRouter();
 
   useEffect(() => {
     const token = checkAuth();
-    if(token){
+    if (token) {
       setConfig({
         headers: {
           authorization: `Bearer ${token}`,
         },
       });
-    }else{
-      router.push('/auth/login')
+    } else {
+      router.push("/auth/login");
     }
   }, []);
 

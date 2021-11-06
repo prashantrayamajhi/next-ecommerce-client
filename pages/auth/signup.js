@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import Layout from "@/components/Layout";
 import styles from "@/styles/Form.module.scss";
 import Link from "next/link";
@@ -22,9 +22,9 @@ export default function signup() {
   const onFormSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    const data = { name, email, password, setIsLoading };
+    const data = { name, email, password };
     try {
-      const res = await Axios.post("/api/v1/auth/login", data);
+      const res = await Axios.post("/api/v1/auth/signup", data);
       setIsLoading(false);
       if (res.status === 201) {
         router.push("/auth/login");
