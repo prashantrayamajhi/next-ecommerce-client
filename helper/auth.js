@@ -7,9 +7,9 @@ export const checkAuth = () => {
       const decoded = jwt_decode(token);
       const current_time = new Date().getTime() / 1000;
       if (current_time > decoded.exp) {
-        return token;
-      } else {
         logout();
+      } else {
+        return token;
       }
     } else {
       logout();
