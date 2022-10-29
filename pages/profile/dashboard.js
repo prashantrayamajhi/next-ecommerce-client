@@ -28,13 +28,23 @@ export default function dashboard() {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const res = await Axios.get("/api/v1/profile", config);
-      setUser(res.data.data);
-    };
+      try{
+        const res = await Axios.get("/api/v1/profile", config);
+        setUser(res.data.data);
+
+      }catch(err){
+        console.log(err)
+      }
+    }; 
 
     const fectchProducts = async () => {
-      const res = await Axios.get("/api/v1/profile/products", config);
-      setProducts(res.data.data);
+      try{
+        const res = await Axios.get("/api/v1/seller/products", config);
+        setProducts(res.data.data);
+
+      }catch(err){
+        console.log(err)
+      }
     };
 
     if (config) {

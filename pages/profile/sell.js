@@ -11,6 +11,7 @@ export default function Create() {
   const [user, setUser] = useState(null);
   const [name, setName] = useState("");
   const [price, setPrice] = useState(0);
+  const [stock, setStock] = useState(5);
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState();
   const [categories, setCategories] = useState([]);
@@ -46,9 +47,9 @@ export default function Create() {
     };
 
     const fetchCategories = async () => {
-      const res = await Axios.get("/api/v1/category");
+      const res = await Axios.get("/api/v1/categories");
       setCategories(res.data.data);
-      setCategory(res.data.data[0]._id);
+      res.data.data.length > 0 && setCategory(res.data.data[0]._id);
     };
 
     if (config) {
@@ -107,6 +108,16 @@ export default function Create() {
               />
             </div>
             <div className={styles.inputWrapper}>
+              <label htmlFor="stock">Stock</label>
+              <input
+                id="stock"
+                type="number"
+                value={stock}
+                onChange={(e) => setStock(e.target.value)}
+                required
+              />
+            </div>
+            <div className={styles.inputWrapper}>
               <label htmlFor="category">Category</label>
               <select
                 value={category}
@@ -125,17 +136,6 @@ export default function Create() {
             </div>
 
             <div className={styles.inputWrapper}>
-              <label htmlFor="img">Image URL</label>
-              <input
-                id="img"
-                type="text"
-                value={img}
-                onChange={(e) => setImg(e.target.value)}
-                required
-              />
-            </div>
-
-            <div className={styles.inputWrapper}>
               <label htmlFor="description">Description</label>
               <textarea
                 id="description"
@@ -145,6 +145,11 @@ export default function Create() {
                   setDescription(e.target.value);
                 }}
               ></textarea>
+            </div>
+
+            <div className={styles.inputWrapper}>
+              <label htmlFor="img">Images</label>
+              <input type={"file"} />
             </div>
 
             <button type="submit" disabled={isLoading}>
