@@ -15,7 +15,8 @@ export default function Create() {
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState();
   const [categories, setCategories] = useState([]);
-  const [img, setImg] = useState("");
+  const [img, setImg] = useState([]);
+  const [displayImg, setDisplayImg] = useState([]);
   const [err, setErr] = useState(null);
 
   const [config, setConfig] = useState(null);
@@ -39,6 +40,43 @@ export default function Create() {
       router.push("/auth/login");
     }
   }, []);
+
+  const image = [];
+
+  const handleFileChange = (e) => {
+    const files = Array.from(e.target.files);
+    files.forEach((img) => {
+      img = URL.createObjectURL(img);
+      image.push(img);
+    });
+    setImg(files);
+    setDisplayImg(image);
+  };
+
+  const handleRemoveImage = (newImg) => {
+    setDisplayImg(displayImg.filter((image) => image !== newImg));
+    newImg = [newImg];
+    let updatedImg = newImg.filter(
+      (image) => img.indexOf(image) !== displayImg.indexOf(img)
+    );
+    if (updatedImg || updatedImg.length <= 0) {
+      updatedImg = [];
+    }
+    setImg(updatedImg);
+  };
+
+  const mappedDisplayImage = displayImg?.map((img, index) => {
+    return (
+      <img
+        key={index}
+        src={img}
+        alt=""
+        onClick={() => {
+          handleRemoveImage(img);
+        }}
+      />
+    );
+  });
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -149,7 +187,18 @@ export default function Create() {
 
             <div className={styles.inputWrapper}>
               <label htmlFor="img">Images</label>
-              <input type={"file"} />
+              <input
+                type="file"
+                name="img"
+                multiple
+                onChange={(e) => {
+                  handleFileChange(e);
+                }}
+              />
+
+              {displayImg.length > 0 && (
+                <div className={styles.displayImg}>{mappedDisplayImage}</div>
+              )}
             </div>
 
             <button type="submit" disabled={isLoading}>
