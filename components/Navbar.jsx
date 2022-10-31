@@ -19,6 +19,9 @@ const Navbar = () => {
     if (checkAuth()) {
       return (
         <>
+          <Link href={"/profile/sell"}>
+            <a>Sell</a>
+          </Link>
           <Link href={"/profile/dashboard"}>
             <a>Dashboard</a>
           </Link>
