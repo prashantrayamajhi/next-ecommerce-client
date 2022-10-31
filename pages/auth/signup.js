@@ -24,7 +24,7 @@ export default function signup() {
     setIsLoading(true);
     const data = { name, email, password };
     try {
-      const res = await Axios.post("/api/v1/auth/signup", data);
+      const res = await Axios.post("/auth/signup", data);
       setIsLoading(false);
       if (res.status === 201) {
         router.push("/auth/login");

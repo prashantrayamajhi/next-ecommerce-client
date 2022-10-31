@@ -28,22 +28,20 @@ export default function dashboard() {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      try{
-        const res = await Axios.get("/api/v1/profile", config);
+      try {
+        const res = await Axios.get("/profile", config);
         setUser(res.data.data);
-
-      }catch(err){
-        console.log(err)
+      } catch (err) {
+        console.log(err);
       }
-    }; 
+    };
 
     const fectchProducts = async () => {
-      try{
-        const res = await Axios.get("/api/v1/seller/products", config);
+      try {
+        const res = await Axios.get("/seller/products", config);
         setProducts(res.data.data);
-
-      }catch(err){
-        console.log(err)
+      } catch (err) {
+        console.log(err);
       }
     };
 
@@ -55,10 +53,7 @@ export default function dashboard() {
 
   const handleDelete = async (id) => {
     try {
-      const res = await Axios.delete(
-        `/api/v1/products/${user._id}/${id}`,
-        config
-      );
+      const res = await Axios.delete(`/products/${user._id}/${id}`, config);
       if (res.status === 200) {
         toast.success("Product deleted successfully");
         window.location.reload();

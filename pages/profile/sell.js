@@ -80,12 +80,12 @@ export default function Create() {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const res = await Axios.get("/api/v1/profile", config);
+      const res = await Axios.get("/profile", config);
       setUser(res.data.data);
     };
 
     const fetchCategories = async () => {
-      const res = await Axios.get("/api/v1/categories");
+      const res = await Axios.get("/categories");
       setCategories(res.data.data);
       res.data.data.length > 0 && setCategory(res.data.data[0]._id);
     };
@@ -99,17 +99,48 @@ export default function Create() {
   const onFormSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    const data = { name, price, description, category, img, user: user._id };
-    try {
-      const res = await Axios.post("/api/v1/products", data, config);
-      if (res.status === 201) {
-        toast.success("Product added successfully");
-        setName("");
-        setPrice("");
-        setDescription("");
-        setImg("");
-        setIsLoading(false);
+    const formData = new FormData();
+
+    formData.append("name", name);
+    formData.append("price", price);
+    formData.append("stock", stock);
+    formData.append("description", description);
+    formData.append("category", category);
+    if (img) {
+      for (let i = 0; i < img.length; i++) {
+        formData.append("images", img[i]);
       }
+    }
+    try {
+      if (router.query.id) {
+        if (!img) {
+          formData.append("image", displayImg);
+        }
+        const res = await Axios.patch(
+          `/seller/products/${router.query.id}`,
+          formData,
+          config
+        );
+
+        if (res.status === 200) {
+          toast.success("Post Updated successfully", {
+            theme: "colored",
+          });
+        }
+      } else {
+        const res = await Axios.post("/seller/products", formData, config);
+        if (res.status === 201) {
+          toast.success("Product added successfully");
+          setName("");
+          setPrice("");
+          setStock(5);
+          setDescription("");
+          setImg([]);
+          setDisplayImg([]);
+          setIsLoading(false);
+        }
+      }
+      window.scrollTo(0, 0);
     } catch (err) {
       console.log(err);
       setErr(err.response.data.err);
@@ -118,13 +149,29 @@ export default function Create() {
     }
   };
 
+  useEffect(() => {
+    const fetchPost = async () => {
+      try {
+        const res = await Axios.get(`/posts/${router.query.id}`);
+      } catch (err) {
+        console.log(err);
+        if (err && err.response && err.response.status == 404) {
+          router.push("/404");
+        }
+      }
+    };
+    if (router.query.id) {
+      fetchPost();
+    }
+  }, [router.query]);
+
   return (
     <>
       <ToastContainer />
       {user && (
-        <Layout title="Sell a product">
+        <Layout title={`${router.query.id ? "Update" : "Sell"} a product`}>
           <form className={styles.form} onSubmit={onFormSubmit}>
-            <h3>Sell A Product</h3>
+            <h3>{router.query.id ? "Update" : "Sell"} A Product</h3>
             <div className={styles.inputWrapper}>
               <label htmlFor="name">Name</label>
               <input
@@ -202,7 +249,7 @@ export default function Create() {
             </div>
 
             <button type="submit" disabled={isLoading}>
-              Submit
+              {router.query.id ? "Update" : "Submit"}
             </button>
           </form>
         </Layout>

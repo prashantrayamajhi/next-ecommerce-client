@@ -30,12 +30,9 @@ export default function Product({ product, relatedProducts }) {
 }
 
 export async function getServerSideProps({ params }) {
-  const product = await Axios.get("/api/v1/products/" + params.id);
+  const product = await Axios.get("/products/" + params.id);
   const relatedProducts = await Axios.get(
-    "/api/v1/products/related/" +
-      params.id +
-      "/" +
-      product.data.data.category._id
+    "/products/related/" + params.id + "/" + product.data.data.category._id
   );
   return {
     props: {
