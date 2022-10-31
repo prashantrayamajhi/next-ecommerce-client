@@ -75,6 +75,7 @@ export default function dashboard() {
               <thead>
                 <tr>
                   <th>SN</th>
+                  <th>Image</th>
                   <th>Name</th>
                   <th>Price</th>
                   <th>Actions</th>
@@ -87,6 +88,9 @@ export default function dashboard() {
                     return (
                       <tr key={index}>
                         <td>{sn}</td>
+                        <td>
+                          <img src={product.images[0]} alt="" />
+                        </td>
                         <td>{product.name}</td>
                         <td>{product.price}</td>
                         <td>
