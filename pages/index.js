@@ -1,8 +1,18 @@
+import { useState, useEffect } from "react";
 import Axios from "@/api/server";
 import HomeComponent from "@/components/Home";
 import Layout from "@/components/Layout";
 
-export default function Home({ products }) {
+export default function Home() {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const res = await Axios.get("/products");
+      setProducts(res.data.data);
+    };
+    fetchProducts();
+  }, []);
   return (
     <>
       <Layout>
@@ -10,13 +20,4 @@ export default function Home({ products }) {
       </Layout>
     </>
   );
-}
-
-export async function getServerSideProps() {
-  const res = await Axios.get("/api/v1/products");
-  return {
-    props: {
-      products: res.data.data,
-    },
-  };
 }
