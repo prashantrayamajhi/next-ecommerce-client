@@ -1,5 +1,4 @@
 import styles from "@/styles/Card.module.scss";
-import Image from "next/image";
 import Link from "next/link";
 
 const Card = ({ product }) => {
@@ -7,7 +6,7 @@ const Card = ({ product }) => {
     <div className={styles.card}>
       {/* <Image src={product.img} height={230} width={200} /> */}
       <Link href={`/product/${product._id}`}>
-        <img src={product.img} alt={product.name} />
+        <img src={product.images[0]} alt={product.name} />
       </Link>
       <div className={styles.details}>
         <Link href={`/product/${product._id}`}>

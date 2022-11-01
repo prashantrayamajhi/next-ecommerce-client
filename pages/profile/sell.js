@@ -105,7 +105,7 @@ export default function Create() {
     formData.append("price", price);
     formData.append("stock", stock);
     formData.append("description", description);
-    formData.append("category", category);
+    // formData.append("category", category);
     if (img) {
       for (let i = 0; i < img.length; i++) {
         formData.append("images", img[i]);
@@ -202,7 +202,7 @@ export default function Create() {
                 required
               />
             </div>
-            <div className={styles.inputWrapper}>
+            {/* <div className={styles.inputWrapper}>
               <label htmlFor="category">Category</label>
               <select
                 value={category}
@@ -218,7 +218,7 @@ export default function Create() {
                   );
                 })}
               </select>
-            </div>
+            </div> */}
 
             <div className={styles.inputWrapper}>
               <label htmlFor="description">Description</label>
