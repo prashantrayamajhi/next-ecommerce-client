@@ -55,14 +55,14 @@ const Navbar = () => {
           </Link>
         </div>
         <div className={styles.search}>
-          <form onSubmit={handleFormSubmit}>
+          {/* <form onSubmit={handleFormSubmit}>
             <input
               type="text"
               placeholder="Search a product"
               value={term}
               onChange={(e) => setTerm(e.target.value)}
             />
-          </form>
+          </form> */}
         </div>
         <div className={styles.navLinks}>
           <Link href="/">

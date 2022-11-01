@@ -27,6 +27,9 @@
   .navLinks {
     display: flex;
     align-items: center;
+    @media (max-width: 700px) {
+      display: none;
+    }
     a,
     .link {
       margin-left: 1rem;
